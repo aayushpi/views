@@ -1,0 +1,17 @@
+  <!doctype html>
+  <html>
+    <head>
+      <title>Word to the big bird</title>
+    </head>
+    <body>
+      <h1>Tweet Tweet</h1>
+      <h1><%= params[:tweet] %></h1>
+      <form action="/post_tweet" method="post">
+        <p>
+          <label for="tweet">Enter tweet here:</label>
+          <input type="textbox" tweet="tweet" />
+      
+        </p>
+      </form>
+    </body>
+    </html>
