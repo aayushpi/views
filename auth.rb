@@ -5,26 +5,43 @@ require 'twitter'
 require 'omniauth'
 require 'omniauth-facebook'
 require 'omniauth-twitter'
+# require 'sinatra/flash'
+
+set :port, 3000
 
 class SinatraApp < Sinatra::Base
   configure do
     set :sessions, true
     set :inline_templates, true
+    # register Sinatra::Flash
   end
-  @@user = nil
   use OmniAuth::Builder do
     provider :twitter, 'akZeVLUrNqzdDkev9Luo6g', '7t7hd4OMUiMzU3xl6K8Z3TMojJXnpHtJWAP7Sw2a8wM'
     #provider :att, 'client_id', 'client_secret', :callback_url => (ENV['BASE_DOMAIN']
   end
   
   get '/' do
-    if @@user == nil
+    if session[:authenticated] != true
       erb "
       <a href='http://localhost:4567/auth/twitter'>Login with twitter</a>
       "
     else
-      "Post a new Tweet"
+      erb "
+      <p>Post a new Tweet<a href='/logout'>Signout</a></p>
+      <form action='/' method='post'>
+        <p>
+          <label for='name'>Tweet something yo</label>
+          <input type='textbox' name='name' />
+        </p>
+      </form>
+      "
     end
+  end
+  
+  post '/' do
+    Twitter.update(params[:name])
+    # flash.now[:notice] = "You can stop rolling your own now."
+    redirect "/"
   end
   
   get '/auth/:provider/callback' do
@@ -37,6 +54,7 @@ class SinatraApp < Sinatra::Base
       config.oauth_token = request.env["omniauth.auth"]["credentials"]["token"]
       config.oauth_token_secret = request.env["omniauth.auth"]["credentials"]["secret"]
     end
+    session[:authenticated] = true
     redirect "/"
         # <pre>#{JSON.pretty_generate(request.env['omniauth.auth'])}</pre>
   end
@@ -59,7 +77,6 @@ class SinatraApp < Sinatra::Base
     session[:authenticated] = false
     redirect '/'
   end
-
 end
 
 SinatraApp.run! if __FILE__ == $0
