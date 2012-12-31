@@ -16,7 +16,7 @@ class SinatraApp < Sinatra::Base
     # register Sinatra::Flash
   end
   use OmniAuth::Builder do
-    provider :twitter, 'akZeVLUrNqzdDkev9Luo6g', '7t7hd4OMUiMzU3xl6K8Z3TMojJXnpHtJWAP7Sw2a8wM'
+    provider :twitter, 'x', 'y'
     #provider :att, 'client_id', 'client_secret', :callback_url => (ENV['BASE_DOMAIN']
   end
   
